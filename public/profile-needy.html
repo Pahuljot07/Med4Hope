@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <script>
+              function doPrev(refFile,prevImg)
+      {
+          const [file] = refFile.files
+          if (file) {
+            prevImg.src = URL.createObjectURL(file)
+          }
+      }
+      $(document).ready(function(){
+
+      $("#nbtnsearch").click(doSearch);
+             
+             function doSearch(){
+             var emailku=$("#nedEmail").val();
+                   var obj={
+                     type:"get",
+                     url:"/profile-needy-search-record",
+                     data:{
+                       kuchemail:emailku
+                     }
+                    }
+                
+                 $.ajax(obj).done(function(respJsonkuch){
+                   //alert(JSON.stringify(respJsonkuch));    //converts Json Format to string
+                   $("#nedName").val(respJsonkuch[0].name);
+                   $("#nedCt").val(respJsonkuch[0].mobile);
+                   $("#nedAdd").val(respJsonkuch[0].address);
+                   $("#nedCity").val(respJsonkuch[0].city);
+                   $("#nedId").val(respJsonkuch[0].proof);
+                   $("#prevImg").prop("src", "uploads/"+respJsonkuch[0].pic);
+                   $("#hdn").val(respJsonkuch[0].pic);
+                  
+                 }).fail(function(errkuch){
+                   alert(errkuch);
+                   //$("#semail").html(errkuch);
+                 })
+               }
+               function setactiveuser()
+               {
+                var au=localStorage.getItem("active");
+                $("#nedEmail").val(au).prop("readonly",true);
+               }
+               setactiveuser();
+            });
+            
+
+        </script>
+</head>
+
+<body><br><br><div class="container">
+    <center>
+    <p>
+        <h2>Profile Form</h2>
+    </p>
+</center>
+    
+    <br><br>
+    
+        <form class="row g-3" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="inputEmail4" class="form-label">Email ID</label>
+                    <input type="hidden" id="hdn" name="hdn"> <!--For Storing Pic Name During JSon-->
+                    <input type="email" class="form-control" name="nedEmail" id="nedEmail" placeholder="Enter your email here">
+                </div>
+                <div class="col-6 mt-4" >
+                    <button type="button" class="btn btn-primary" id="nbtnsearch" >Search</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-7">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" name="nedName" id="nedName">
+                </div>
+                <div class="col-md-5">
+                    <label for="inputPassword4" class="form-label">Contact</label>
+                    <input type="number" class="form-control" name="nedCt" id="nedCt" placeholder="Mobile Number">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="inputAddress" class="form-label">Address</label>
+                    <input type="text" class="form-control" name="nedAdd" id="nedAdd" placeholder="Area, Street, Landmark">
+                </div>
+                <div class="col-md-4">
+                    <label for="inputState" class="form-label">City</label>
+                    <select name="nedCity" id="nedCity" class="form-select">
+                        <option selected>Choose...</option>
+                        <option>...</option>
+                    </select>
+                </div>
+            </div>
+           
+            
+            <div class="row">
+            <div class="col-md-6">
+                <label for="inputState" class="form-label">ID Proof Type</label>
+                <select name="nedId" id="nedId" class="form-select">
+                    <option selected>Choose...</option>
+                    <option>...</option>
+                </select>
+            </div>
+           
+            <div class="col-md-3 mt-4">
+                <input type="file" name="ppic" id="ppic" onchange="doPrev(this,prevImg);" accept="image/* pdf/*">
+            </div>
+                <div class="col-md-3 mt-4" >
+                  <img src="" id="prevImg" name="prevImg" height="100" width="100">
+                </div>
+              
+            </div>
+            
+            <center>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary" formaction="/save-needy">Save</button>
+                <button type="submit" class="btn btn-primary" formaction="/update-needy">Update</button>
+            </div>
+        </center>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

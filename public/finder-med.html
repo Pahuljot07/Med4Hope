@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <script src="script/angular.min.js"></script>
+  <script>
+    var module = angular.module("myModule", []);
+    module.controller("myController", function ($scope, $http) {
+      $scope.jsonArray;
+      $scope.fetchcity = function () {
+        var url = "get-city-name";
+        $http.get(url).then(done, fail);
+        function done(response) {
+          //alert(JSON.stringify(response.data));
+          $scope.jsonArray = response.data;
+        }
+        function fail(response) {
+          alert(response.data);
+        }
+
+
+        //========================
+
+        $scope.jsonArraymed;
+        $scope.fetchmed = function () {
+          var url = "/get-med-name";
+          $http.get(url).then(done, fail);
+          function done(response) {
+            //alert(JSON.stringify(response.data));
+            $scope.jsonArraymed = response.data;
+          }
+          function fail(response) {
+            alert(response.data);
+          }
+
+
+        }
+        $scope.jsonArrayDonors;
+        $scope.fetchDonors = function () {
+          var url = "/fetch-donors?kuchmed=" + $scope.smed.med + "&kuchcity=" + $scope.scity.city;
+          
+          $http.get(url).then(done, fail);
+          function done(response) {
+            //alert(JSON.stringify(response.data));
+            $scope.jsonArrayDonors = response.data;
+
+          }
+          function fail(response) {
+            alert(response.data);
+          }
+        }
+        $scope.selmodelobj;
+        $scope.doshowmodel=function(selindex){
+               $scope.selmodelobj=$scope.jsonArrayDonors[selindex];
+        }
+      }
+
+
+    });
+  </script>
+</head>
+
+<body ng-app="myModule" ng-controller="myController" ng-init="fetchcity();fetchmed();">
+  <div class="container"><br><br>
+    <center><h2>Medicine Finder</h2></center><br>
+
+    <div class="row">
+      <div class="col-md-6">
+        Select City:<select class="form-select" ng-options="obj.city  for obj in jsonArray" ng-model="scity">
+          <option value="">Select</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+       Select Medicine:<select class="form-select" ng-options="obj.med  for obj in jsonArraymed" ng-model="smed">
+          <option value="">Select</option>
+        </select><br>
+      </div>
+    </div>
+    
+    </center>
+    <center><input type="button" class="btn btn-outline-primary" value="Fetch Donors"
+        ng-click="fetchDonors();" style="width: 200px; margin: auto;"></center>
+
+    <div class="row">
+      <div class="col-md-3" ng-repeat="obj in jsonArrayDonors">
+        <div class="card">
+          <img src="{{obj.pic}}" class="card-img-top rounded-circle"" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Name:{{obj.name}}</h5>
+            <p class="card-text">Contact:{{obj.mobile}}<br>Medicine:{{obj.med}}<br>Availability Hours:{{obj.ahoursfrom}}-{{obj.ahoursto}}</p>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailmodal" ng-click="doshowmodel($index);">
+                Details
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="detailmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{{selmodelobj.email}}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Name:{{selmodelobj.name}}<br>Mobile:{{selmodelobj.mobile}}<br>Address:{{selmodelobj.address}}<br>City:{{selmodelobj.city}}<br>Availability Hours:{{obj.ahoursfrom}}-{{obj.ahoursto}}</p>
+      </div>
+      <div class="modal-footer">
+        </div>
+    </div> 
+  </div>
+</div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

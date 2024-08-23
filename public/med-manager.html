@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="script/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+    integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+   
+   <script>
+    $(document).ready(function(){
+              function setactiveuser()
+               {
+                var au=localStorage.getItem("active");
+                $("#temail").val(au).prop("readonly",true);
+               }
+               setactiveuser();
+
+
+            });
+
+
+
+        var module=angular.module("myModule",[]);
+      module.controller("myController",function($scope,$http){
+        $scope.jsonArraymed;
+        $scope.txtemail;
+       
+                
+        $scope.fetchmed = function () 
+        {
+          //alert("*"+$scope.txtemail+"*");
+          var url = "/get-med-records?emailkuch="+$scope.txtemail;
+          $http.get(url).then(done, fail);
+          function done(response) 
+          {
+            //alert(JSON.stringify(response.data));
+            $scope.jsonArraymed = response.data;
+          
+          }
+          function fail(response) {
+            alert(response.data);
+          }
+
+
+        }
+        $scope.doDelete=function(srno)
+             {
+              //alert(srno);
+                if(confirm("R U Sure?")==false)
+                        return;
+                var url="/get-angular-med-delete?kuchsrno="+srno;
+                $http.get(url).then(done,fail);
+                function done(response)
+                {
+                    //alert(response.data);
+                    $scope.fetchmed();
+                }
+                function fail(response)
+                {
+                    alert(response.data);
+                }
+             }  
+            
+            });
+          
+
+        
+      
+          
+              
+      </script>
+
+  </head>
+  <body ng-app="myModule" ng-controller="myController">
+    
+    <div class="container">
+        <center>
+           <br><h2>Medicine Manager</h2><br>
+    
+        <div class="row">
+          <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-7">
+            <input type="text" class="form-control"  placeholder="Enter your email here" ng-model="txtemail" >
+          
+        </div>
+          <div class="col-sm-3 " >
+          <center><input type="button" class="btn btn-primary" ng-click="fetchmed();" value="Get Records"></center></div>
+        </div>
+        
+    
+
+ <table class="table table table-striped">
+  <thead> 
+    <th scope="col">Sr.No</th><th scope="col">Medicine Name</th><th scope="col">Expiry Date</th><th scope="col">Packing</th><th scope="col">Quantity</th><th scope="col">Operations</th>
+  </thead>
+          
+        <tr ng-repeat="obj in jsonArraymed">
+          
+            <td>{{$index+1}}</td>
+            <td>{{obj.med}}</td>
+            <td>{{obj.expdate}}</td>
+            <td>{{obj.packing}}</td>
+            <td>{{obj.qty}}</td>
+            <center><td><input type="button" value="Unavail" ng-click="doDelete(obj.srno);"></td></center>
+            
+           
+             
+        </tr>
+   
+  </table>
+
+    </center>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+
+      $("#btnpro").click(function () {
+        location.href = "profile-donor.html";
+      });
+
+      $("#btnavail").click(function () {
+        location.href = "avail-med.html";
+      });
+      $("#btnmed").click(function () {
+        location.href = "med-manager.html";
+      });
+      function setactiveuser()
+               {
+                var au=localStorage.getItem("active");
+                $("#welcome").html(au);
+                $("#temail").val(au);
+               }
+               setactiveuser();
+
+      //Update Password
+      $("#btnupd").click(function () {
+        var emailku = $("#temail").val();
+        var opw = $("#opwd").val();
+        var npw = $("#npwd").val();
+        var cpw = $("#cpwd").val();
+        if (opw != npw) {
+          if (npw == cpw) {
+
+
+            var objU = {
+              type: "get",
+              url: "/update-pwd",
+              data: {
+                kuchemail: emailku,
+                kuchopw: opw,
+                kuchnpw: npw,
+                kuchcpw: cpw
+
+
+              }
+            }
+            $.ajax(objU).done(function (respkuch) {
+              $("#res").html("Password Updated Successfully");
+            }).fail(function (errkuch) {
+              alert(errkuch);
+
+            })
+          }
+
+          else
+            $("#res").html("New Password And Confirm Password Does Not Match");
+        }
+
+        else
+          $("#res").html("Old Password And New Password Should Not Match");
+
+
+      });
+      
+     
+
+
+
+      $("#logout").click(function () {
+        localStorage.removeItem("active");
+        if (confirm("Are you sure?") == true);
+        location.href = "index.html";
+      })
+    });
+
+
+
+  </script>
+
+</head>
+
+<body>
+  <div class="container">
+    <nav class="navbar bg-body-tertiary navbar navbar-light ">
+      <div class="container-fluid">
+        <a class="navbar-brand" id="welcome"></a>
+
+        <form class="d-flex" role="search">
+
+          <button class="btn btn-outline-success" type="button" id="logout">Logout</button>
+        </form>
+      </div>
+    </nav>
+
+    <center>
+      <p>
+      <h1><br>Donor Dashboard<br><br></h1>
+      </p>
+    </center>
+    <center>
+      <div class="row">
+        <div class="card col-md-3">
+          <img src="media/792596.png" class="card-img-top" alt="..." style="width: 100px; height: 100px; margin: auto;">
+          <div class="card-body">
+            <p class="card-text">Be a part of us by adding your identity</p><br>
+            <a href="#" class="btn btn-success" id="btnpro">Profile</a>
+          </div>
+        </div>
+        <div class="card col-md-3">
+          <img src="media/10433898.png" class="card-img-top" alt="..."
+            style="width: 100px; height: 100px; margin: auto;">
+          <div class="card-body">
+            <p class="card-text">Every donation counts, and by giving the gift of health, we create a healthier future
+            </p>
+            <a href="#" class="btn btn-success" id="btnavail">Avail Medicines</a>
+          </div>
+        </div>
+        <div class="card col-md-3">
+          <img src="media/9623297.png" class="card-img-top" alt="..."
+            style="width: 100px; height: 100px; margin: auto;">
+          <div class="card-body">
+            <p class="card-text">You can manage your availed medicines here</p><br>
+            <a href="#" class="btn btn-success" id="btnmed">Medicine Manager</a>
+          </div>
+        </div>
+        <div class="card col-md-3">
+          <img src="media/4862384.png" class="card-img-top" alt="..."
+            style="width: 100px; height: 100px; margin: auto;">
+          <div class="card-body">
+            <p class="card-text">Click here to reset your password</p><br>
+            <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Settings</a>
+          </div>
+        </div>
+      </div>
+    </center>
+  </div>
+  <!--                               Settings Modal                                  -->
+
+  <div class="modal fade " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Settings</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <center>
+            <p>
+            <h3>Change Password</h3>
+            </p>
+          </center>
+          <form method="post" action="update-password">
+            <div class="row mb-3">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+              <div class="col-sm-10">
+                <input type="email" class="form-control" id="temail" name="temail">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="inputPassword3" class="col-sm-2 col-form-label">Old Password</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="opwd" name="opwd">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="inputPassword3" class="col-sm-2 col-form-label">New Password</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="npwd" name="npwd">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="inputPassword3" class="col-sm-2 col-form-label">Confirm Password</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="cpwd" name="cpwd">
+              </div>
+            </div>
+
+            <center><button type="button" class="btn btn-primary" id="btnupd">Update Password</button></center>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <span id="res"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
